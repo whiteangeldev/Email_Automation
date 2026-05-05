@@ -175,11 +175,15 @@ def summarize(r: ReceivedEmail, *, index: int | None = None) -> None:
     idx = f"[{index}] " if index is not None else ""
     subject = (r.subject or "").strip()
     date = (r.date or "").strip()
-    preview = " ".join(((r.body or "").strip()).split())
-    preview = preview[:200] + ("..." if len(preview) > 200 else "")
     print(f"{idx}{date} | {subject}")
     print(f"{idx}From: {r.from_addr}")
-    print(f"{idx}{preview or '(no text/plain body)'}")
+    print(f"{idx}Body:")
+    body = (r.body or "").strip()
+    if body:
+        for line in body.splitlines():
+            print(f"{idx}{line}")
+    else:
+        print(f"{idx}(no text/plain body)")
 
 
 def receive_unread(limit: int) -> list[ReceivedEmail]:
